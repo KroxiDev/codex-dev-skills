@@ -1,0 +1,4 @@
+interface:
+  display_name: "Revisión de código"
+  short_description: "Revisa estándares y especificación"
+  default_prompt: "Usa $code-review para revisar estos cambios en dos ejes."

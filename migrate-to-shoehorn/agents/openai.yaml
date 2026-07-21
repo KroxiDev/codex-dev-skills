@@ -1,0 +1,4 @@
+interface:
+  display_name: "Migrar a shoehorn"
+  short_description: "Reemplaza casts de fixtures de test"
+  default_prompt: "Usa $migrate-to-shoehorn para migrar estos fixtures de test."

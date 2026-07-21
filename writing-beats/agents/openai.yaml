@@ -1,0 +1,7 @@
+interface:
+  display_name: "Organizar beats"
+  short_description: "Redacta un artículo beat por beat"
+  default_prompt: "Usa $writing-beats para redactar este artículo un beat por vez."
+
+policy:
+  allow_implicit_invocation: false

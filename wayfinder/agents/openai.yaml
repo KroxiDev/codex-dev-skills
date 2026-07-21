@@ -1,0 +1,7 @@
+interface:
+  display_name: "Wayfinder"
+  short_description: "Mapea decisiones de trabajo extenso"
+  default_prompt: "Usa $wayfinder para trazar un mapa de decisiones."
+
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Modelado de dominio"
+  short_description: "Mantiene contexto, términos y ADRs"
+  default_prompt: "Usa $domain-modeling para precisar el modelo de dominio."

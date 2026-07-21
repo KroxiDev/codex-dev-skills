@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagnosticar bugs"
+  short_description: "Aísla bugs con un bucle reproducible"
+  default_prompt: "Usa $diagnosing-bugs para diagnosticar este fallo con evidencia."

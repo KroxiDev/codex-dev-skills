@@ -1,0 +1,7 @@
+interface:
+  display_name: "Entrevista por lotes"
+  short_description: "Pregunta todo el frontier por rondas"
+  default_prompt: "Usa $batch-grill-me para precisar este diseño por rondas."
+
+policy:
+  allow_implicit_invocation: false

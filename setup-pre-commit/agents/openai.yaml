@@ -1,0 +1,4 @@
+interface:
+  display_name: "Configurar pre-commit"
+  short_description: "Configura Husky, lint-staged y checks"
+  default_prompt: "Usa $setup-pre-commit para añadir checks antes del commit."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resolver conflictos Git"
+  short_description: "Resuelve conflictos de merge o rebase"
+  default_prompt: "Usa $resolving-merge-conflicts para analizar estos conflictos."

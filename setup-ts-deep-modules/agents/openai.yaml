@@ -1,0 +1,7 @@
+interface:
+  display_name: "Configurar deep modules TS"
+  short_description: "Protege internals de packages TypeScript"
+  default_prompt: "Usa $setup-ts-deep-modules para configurar límites de packages."
+
+policy:
+  allow_implicit_invocation: false

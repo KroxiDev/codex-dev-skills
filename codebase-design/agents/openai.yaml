@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diseño del codebase"
+  short_description: "Diseña interfaces y deep modules"
+  default_prompt: "Usa $codebase-design para evaluar esta interface y sus seams."

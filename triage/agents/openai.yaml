@@ -1,0 +1,7 @@
+interface:
+  display_name: "Triage"
+  short_description: "Clasifica y verifica issues o PRs"
+  default_prompt: "Usa $triage para evaluar estos issues o PRs."
+
+policy:
+  allow_implicit_invocation: false

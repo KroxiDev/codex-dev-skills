@@ -1,0 +1,7 @@
+interface:
+  display_name: "Diseñar workflows"
+  short_description: "Especifica loops recurrentes delegables"
+  default_prompt: "Usa $loop-me para convertir este loop en un workflow."
+
+policy:
+  allow_implicit_invocation: false
