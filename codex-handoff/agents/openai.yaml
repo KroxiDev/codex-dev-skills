@@ -1,0 +1,7 @@
+interface:
+  display_name: "Transferir tarea de Codex"
+  short_description: "Prepara y transfiere contexto a Codex"
+  default_prompt: "Usa $codex-handoff para continuar este trabajo en otra tarea."
+
+policy:
+  allow_implicit_invocation: false

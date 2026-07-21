@@ -1,0 +1,4 @@
+interface:
+  display_name: "TDD"
+  short_description: "Desarrolla con ciclos red-green"
+  default_prompt: "Usa $tdd para implementar este cambio test-first."

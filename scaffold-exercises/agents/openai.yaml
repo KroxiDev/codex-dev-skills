@@ -1,0 +1,4 @@
+interface:
+  display_name: "Crear ejercicios"
+  short_description: "Genera scaffolds de ejercicios válidos"
+  default_prompt: "Usa $scaffold-exercises para crear esta sección de ejercicios."

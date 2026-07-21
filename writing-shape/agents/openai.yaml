@@ -1,0 +1,7 @@
+interface:
+  display_name: "Dar forma a un artículo"
+  short_description: "Diseña la secuencia de párrafos"
+  default_prompt: "Usa $writing-shape para dar forma narrativa a este material."
+
+policy:
+  allow_implicit_invocation: false

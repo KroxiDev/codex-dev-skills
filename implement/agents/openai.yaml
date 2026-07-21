@@ -1,0 +1,7 @@
+interface:
+  display_name: "Implementar"
+  short_description: "Implementa una spec con TDD y revisión"
+  default_prompt: "Usa $implement para ejecutar esta unidad de trabajo especificada."
+
+policy:
+  allow_implicit_invocation: false

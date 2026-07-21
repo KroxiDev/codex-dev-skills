@@ -1,0 +1,7 @@
+interface:
+  display_name: "Editar un artículo"
+  short_description: "Mejora estructura, claridad y concisión"
+  default_prompt: "Usa $edit-article para revisar y mejorar este borrador."
+
+policy:
+  allow_implicit_invocation: false

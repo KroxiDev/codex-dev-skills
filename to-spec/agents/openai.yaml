@@ -1,0 +1,7 @@
+interface:
+  display_name: "Convertir a spec"
+  short_description: "Sintetiza la conversación como spec"
+  default_prompt: "Usa $to-spec para convertir esta conversación en una spec."
+
+policy:
+  allow_implicit_invocation: false

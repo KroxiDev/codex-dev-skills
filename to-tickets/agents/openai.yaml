@@ -1,0 +1,7 @@
+interface:
+  display_name: "Convertir a tickets"
+  short_description: "Crea tickets tracer-bullet bloqueados"
+  default_prompt: "Usa $to-tickets para dividir esta spec en tickets ejecutables."
+
+policy:
+  allow_implicit_invocation: false

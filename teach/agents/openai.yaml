@@ -1,0 +1,7 @@
+interface:
+  display_name: "Enseñar"
+  short_description: "Mantiene lecciones y progreso educativo"
+  default_prompt: "Usa $teach para enseñarme este tema en el workspace."
+
+policy:
+  allow_implicit_invocation: false

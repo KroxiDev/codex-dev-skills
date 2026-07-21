@@ -1,0 +1,4 @@
+interface:
+  display_name: "Investigar"
+  short_description: "Investiga con fuentes primarias citadas"
+  default_prompt: "Usa $research para investigar esta pregunta con fuentes primarias."

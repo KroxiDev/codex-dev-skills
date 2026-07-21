@@ -1,0 +1,4 @@
+interface:
+  display_name: "Crear un prototipo"
+  short_description: "Valida decisiones con prototipos"
+  default_prompt: "Usa $prototype para responder esta pregunta de diseño."

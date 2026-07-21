@@ -1,0 +1,4 @@
+interface:
+  display_name: "Entrevista rigurosa"
+  short_description: "Cuestiona planes y decisiones a fondo"
+  default_prompt: "Usa $grilling para poner a prueba este plan."

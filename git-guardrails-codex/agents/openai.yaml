@@ -1,0 +1,4 @@
+interface:
+  display_name: "Guardrails de Git para Codex"
+  short_description: "Protege Git contra comandos peligrosos"
+  default_prompt: "Usa $git-guardrails-codex para reforzar la seguridad de Git."

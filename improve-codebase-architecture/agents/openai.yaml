@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mejorar arquitectura"
+  short_description: "Encuentra modules que pueden profundizarse"
+  default_prompt: "Usa $improve-codebase-architecture para evaluar este codebase."
+
+policy:
+  allow_implicit_invocation: false

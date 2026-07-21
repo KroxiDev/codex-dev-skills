@@ -1,0 +1,7 @@
+interface:
+  display_name: "Entrevistar con docs"
+  short_description: "Precisa decisiones y actualiza documentos"
+  default_prompt: "Usa $grill-with-docs para precisar el diseño y documentar decisiones."
+
+policy:
+  allow_implicit_invocation: false
