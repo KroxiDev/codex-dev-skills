@@ -1,6 +1,6 @@
 # Skills de desarrollo para Codex
 
-Colección de 40 skills traducidos a español neutro y adaptados para Codex a partir de [mattpocock/skills](https://github.com/mattpocock/skills). Incluye los skills de ingeniería presentes en la colección local y otros skills relacionados del mismo repositorio fuente.
+Colección de 41 skills traducidos a español neutro y adaptados para Codex a partir de [mattpocock/skills](https://github.com/mattpocock/skills). Incluye los skills de ingeniería presentes en la colección local y otros skills relacionados del mismo repositorio fuente.
 
 ## Compatibilidad
 
