@@ -1,0 +1,7 @@
+interface:
+  display_name: "Continuar tarea"
+  short_description: "Genera un prompt breve para otra sesión"
+  default_prompt: "Usa $continue-task para preparar un prompt de continuación."
+
+policy:
+  allow_implicit_invocation: false
