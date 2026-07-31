@@ -72,12 +72,17 @@ warn() { printf '  %s⚠ %s%s\n' "$YELLOW" "$1" "$RESET"; }
 open_url() {
   local url="$1"
   printf '  %s↗ abriendo%s %s\n' "$GREEN" "$RESET" "$url"
-  { if   command -v wslview     >/dev/null 2>&1; then wslview "$url"
-    elif command -v explorer.exe >/dev/null 2>&1; then explorer.exe "$url"
-    elif command -v xdg-open    >/dev/null 2>&1; then xdg-open "$url"
-    elif command -v open        >/dev/null 2>&1; then open "$url"
-    else warn "no se pudo abrir el navegador; visita manualmente: $url"; fi
-  } >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
+  if command -v wslview >/dev/null 2>&1; then
+    wslview "$url" >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
+  elif command -v explorer.exe >/dev/null 2>&1; then
+    explorer.exe "$url" >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$url" >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
+  elif command -v open >/dev/null 2>&1; then
+    open "$url" >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
+  else
+    warn "no se pudo abrir el navegador; visita manualmente: $url"
+  fi
 }
 
 # pause "msg" — wait for the human to confirm they've done the manual part.

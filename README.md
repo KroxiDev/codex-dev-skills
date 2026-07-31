@@ -20,6 +20,15 @@ Al abrir este repositorio, o uno de sus subdirectorios, Codex descubre automáti
 
 Las skills tienen alcance local a este repositorio. Para utilizarlas en otro proyecto, copia `.agents/skills` a ese repositorio o instálalas como skills de usuario.
 
+## Validación
+
+Instala las dependencias una vez con `npm install`. Esto activa un hook pre-commit que formatea los archivos staged y luego ejecuta:
+
+1. `npm run validate:skills`: rechaza UTF-8 inválido, BOM, mojibake habitual, caracteres de reemplazo, finales distintos de LF, archivos sin salto final, metadatos incompletos y enlaces locales rotos.
+2. `npm test`: comprueba el comportamiento del verificador y las regresiones conocidas de los skills.
+
+También puedes ejecutar ambos comandos manualmente antes de compartir cambios.
+
 ## Procedencia
 
 La revisión de fidelidad se realizó contra el commit upstream `ed37663cc5fbef691ddfecd080dff42f7e7e350d`. Se conserva la licencia MIT y el copyright del autor original.
