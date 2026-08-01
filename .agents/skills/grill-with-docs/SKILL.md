@@ -1,11 +1,7 @@
 ---
 name: grill-with-docs
-description: Entrevista intensivamente mientras mantiene documentos de dominio y decisiones. Usar cuando el usuario invoque explícitamente el skill para precisar un plan o diseño y documentarlo durante la conversación.
+description: Una entrevista sin descanso para afilar un plan o diseño, que además crea documentación (ADRs y glosario) sobre la marcha.
+disable-model-invocation: true
 ---
 
-# Entrevistar con documentación
-
-1. Aplicar `$grilling` una pregunta por vez, con respuesta recomendada.
-2. Aplicar `$domain-modeling` a cada decisión confirmada.
-3. Actualizar `CONTEXT.md`, glosario y ADRs durante la sesión, sin duplicar información.
-4. Finalizar solo cuando no queden decisiones relevantes abiertas y el usuario confirme el entendimiento compartido.
+Ejecutar una sesión de `grilling`, usando el skill `domain-modeling`.

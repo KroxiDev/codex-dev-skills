@@ -1,7 +1,0 @@
-interface:
-  display_name: "Crear cuestionario"
-  short_description: "Extrae conocimiento mediante preguntas"
-  default_prompt: "Usa $to-questionnaire para preparar preguntas para esta persona."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Diseñar una interface"
-  short_description: "Explora alternativas de interface"
-  default_prompt: "Usa $design-an-interface para comparar diseños de interface."

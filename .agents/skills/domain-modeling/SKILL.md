@@ -1,26 +1,74 @@
 ---
 name: domain-modeling
-description: Construye y precisa el modelo de dominio de un proyecto. Usar para definir terminología, mantener lenguaje ubicuo, registrar decisiones arquitectónicas o actualizar contexto del dominio.
+description: Construye y afila el modelo de dominio de un proyecto. Usar cuando el usuario quiera fijar la terminología del dominio o un lenguaje ubicuo, registrar una decisión arquitectónica, o cuando otro skill necesite mantener el modelo de dominio.
 ---
 
 # Modelado de dominio
 
-Usar este skill para cambiar activamente el modelo: cuestionar términos, probar escenarios y registrar decisiones cuando se confirman. Leer vocabulario no constituye por sí solo una sesión de modelado.
+Construir y afilar activamente el modelo de dominio del proyecto mientras diseñas. Esta es la disciplina *activa* — desafiar términos, inventar escenarios límite y escribir el glosario y las decisiones en el momento en que cristalizan. (Meramente *leer* `CONTEXT.md` para tomar vocabulario no es este skill — eso es un hábito de una línea que cualquier skill puede hacer. Este skill es para cuando estás cambiando el modelo, no solo consumiéndolo.)
 
-## Estructura
+## Estructura de archivos
 
-- Con un solo contexto, usar `CONTEXT.md` en la raíz y ADRs en `docs/adr/`.
-- Si existe `CONTEXT-MAP.md`, seguirlo y mantener el `CONTEXT.md` y los ADRs del contexto correspondiente; reservar `docs/adr/` raíz para decisiones de todo el sistema.
-- Crear archivos y directorios de forma perezosa, solo cuando haya contenido confirmado que registrar.
+La mayoría de los repos tienen un solo contexto:
+
+```
+/
+├── CONTEXT.md
+├── docs/
+│   └── adr/
+│       ├── 0001-event-sourced-orders.md
+│       └── 0002-postgres-for-write-model.md
+└── src/
+```
+
+Si existe un `CONTEXT-MAP.md` en la raíz, el repo tiene múltiples contextos. El mapa apunta a dónde vive cada uno:
+
+```
+/
+├── CONTEXT-MAP.md
+├── docs/
+│   └── adr/                          ← decisiones de todo el sistema
+├── src/
+│   ├── ordering/
+│   │   ├── CONTEXT.md
+│   │   └── docs/adr/                 ← decisiones específicas del contexto
+│   └── billing/
+│       ├── CONTEXT.md
+│       └── docs/adr/
+```
+
+Crear los archivos de forma diferida — solo cuando haya algo que escribir. Si no existe `CONTEXT.md`, crearlo cuando se resuelva el primer término. Si no existe `docs/adr/`, crearlo cuando se necesite el primer ADR.
 
 ## Durante la sesión
 
-1. Señalar de inmediato cualquier uso que contradiga el glosario: explicar la definición existente y pedir que se resuelva la diferencia.
-2. Ante lenguaje vago o sobrecargado, proponer un término canónico preciso y distinguir los conceptos confundidos.
-3. Inventar escenarios concretos y casos límite para tensionar relaciones, invariantes y límites.
-4. Contrastar afirmaciones con el código. Exponer contradicciones entre la conversación y el comportamiento existente.
-5. Actualizar `CONTEXT.md` en cuanto se resuelva un término, usando [formato-contexto.md](references/formato-contexto.md). No acumular cambios para el final.
+### Desafiar contra el glosario
 
-`CONTEXT.md` es únicamente un glosario del dominio: excluir specs, notas temporales y detalles de implementación.
+Cuando el usuario use un término que entra en conflicto con el lenguaje existente en `CONTEXT.md`, señalarlo de inmediato. "Tu glosario define 'cancelación' como X, pero parece que te refieres a Y — ¿cuál es?"
 
-Ofrecer un ADR solo cuando la decisión reúna las tres condiciones: es costosa de revertir, sorprendería sin contexto y resultó de un trade-off real. Si falta cualquiera, no crear ADR. Usar [formato-adr.md](references/formato-adr.md) y no registrar supuestos no confirmados.
+### Afilar el lenguaje difuso
+
+Cuando el usuario use términos vagos o sobrecargados, proponer un término canónico preciso. "Dices 'cuenta' — ¿te refieres al Customer o al User? Son cosas distintas."
+
+### Discutir escenarios concretos
+
+Cuando se estén discutiendo relaciones del dominio, someterlas a estrés con escenarios específicos. Inventar escenarios que sondeen casos límite y obliguen al usuario a ser preciso sobre las fronteras entre conceptos.
+
+### Contrastar con el código
+
+Cuando el usuario afirme cómo funciona algo, comprobar si el código está de acuerdo. Si encuentras una contradicción, sácala a la superficie: "Tu código cancela Orders completas, pero acabas de decir que la cancelación parcial es posible — ¿cuál es la correcta?"
+
+### Actualizar CONTEXT.md sobre la marcha
+
+Cuando un término se resuelva, actualizar `CONTEXT.md` ahí mismo. No acumularlos en lotes — capturarlos según ocurren. Usar el formato de [formato-contexto.md](references/formato-contexto.md).
+
+`CONTEXT.md` debe estar totalmente libre de detalles de implementación. No tratar `CONTEXT.md` como una spec, un borrador o un repositorio de decisiones de implementación. Es un glosario y nada más.
+
+### Ofrecer ADRs con moderación
+
+Ofrecer crear un ADR solo cuando las tres condiciones sean ciertas:
+
+1. **Difícil de revertir** — el coste de cambiar de opinión más adelante es significativo
+2. **Sorprendente sin contexto** — un lector futuro se preguntará "¿por qué lo hicieron así?"
+3. **Resultado de un trade-off real** — había alternativas genuinas y se eligió una por razones específicas
+
+Si falta cualquiera de las tres, omitir el ADR. Usar el formato de [formato-adr.md](references/formato-adr.md).

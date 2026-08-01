@@ -1,0 +1,24 @@
+{
+  "name": "kroxidev",
+  "description": "Marketplace personal de plugins de Claude Code de KroxiDev.",
+  "owner": {
+    "name": "Fabrizio Bruzzese",
+    "email": "bruzzesefabrizio@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "engineering-skills",
+      "source": "./",
+      "description": "Colección de 31 skills de ingeniería en español neutro para Claude Code y Codex: diseño de codebase, TDD, revisión de código, diagnóstico de bugs, planificación, triage, traspasos y construcción de skills.",
+      "category": "development",
+      "tags": [
+        "skills",
+        "engineering",
+        "code-review",
+        "tdd",
+        "architecture",
+        "codex"
+      ]
+    }
+  ]
+}

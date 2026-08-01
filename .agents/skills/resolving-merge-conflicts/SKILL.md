@@ -1,15 +1,14 @@
 ---
 name: resolving-merge-conflicts
-description: Diagnostica y resuelve conflictos de un merge o rebase en progreso. Usar cuando Git informe archivos sin fusionar y el usuario solicite resolverlos o continuar la operación.
+description: "Usar cuando haya que resolver un conflicto de merge/rebase de git en progreso."
 ---
 
-# Resolver conflictos de merge
+1. **Ver el estado actual** del merge/rebase. Revisar el historial de git y los archivos en conflicto.
 
-1. Confirmar que existe un merge o rebase en curso con `git status`; identificar todos los archivos sin fusionar y la operación activa. No iniciar otra operación ni usar `--abort`.
-2. Para cada hunk, investigar la intención de ambos lados desde sus fuentes primarias: commits, PRs, issues, tests y código relacionado. No resolver por apariencia textual.
-3. Explicar la intención de cada lado y decidir si se combinan, si uno reemplaza al otro o si hace falta una adaptación. Preservar ambas cuando sean compatibles.
-4. Editar solo los archivos en conflicto. Verificar que no queden marcadores y ejecutar formato, typecheck y tests pertinentes; corregir únicamente regresiones introducidas por la resolución.
-5. Mostrar el resultado antes de agregar archivos al índice. Tras la confirmación del usuario, usar rutas explícitas —nunca `git add .`— y continuar la operación existente.
-6. Repetir hasta terminar el merge o rebase y comprobar el estado final. No hacer push.
+2. **Encontrar las fuentes primarias** de cada conflicto. Entender en profundidad por qué se hizo cada cambio y cuál era la intención original. Leer los mensajes de commit, revisar las PRs, revisar los issues/tickets originales.
 
-Si la evidencia no basta, detenerse y pedir el contexto necesario; mantener la operación intacta en lugar de abortarla.
+3. **Resolver cada hunk.** Preservar ambas intenciones cuando sea posible. Cuando sean incompatibles, elegir la que coincida con el objetivo declarado del merge y anotar el trade-off. **No** inventar comportamiento nuevo. Resolver siempre; nunca `--abort`.
+
+4. Descubrir los **checks automatizados** del proyecto y ejecutarlos — típicamente typecheck, luego tests, luego formato. Arreglar todo lo que el merge haya roto.
+
+5. **Terminar el merge/rebase.** Stagear todo y commitear. Si es un rebase, continuar el proceso hasta que todos los commits estén rebasados.

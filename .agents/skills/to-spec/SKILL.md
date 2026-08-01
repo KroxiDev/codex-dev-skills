@@ -1,16 +1,75 @@
 ---
 name: to-spec
-description: Convierte la conversación y el contexto del codebase en una spec y la publica en el tracker configurado. Usar cuando el usuario invoque explícitamente el skill para sintetizar una PRD sin una entrevista nueva.
+description: Convierte la conversación actual en una spec y la publica en el issue tracker del proyecto — sin entrevista, solo síntesis de lo ya discutido.
+disable-model-invocation: true
 ---
 
-# Convertir a spec
+Este skill toma el contexto de la conversación actual y el entendimiento del codebase y produce una spec (puede que conozcas este documento como PRD). NO entrevistar al usuario — solo sintetizar lo que ya sabes.
 
-Convertir la conversación actual en una especificación sin abrir una nueva entrevista. Si falta información, documentarla como no resuelta en vez de inventarla.
+El issue tracker y el vocabulario de etiquetas de triage deberían estar ya configurados (p. ej. en `docs/agents/issue-tracker.md`) — si no, preguntar al usuario qué tracker usa.
 
-1. Sintetizar todo lo ya conversado. Leer referencias pasadas por el usuario y explorar el código suficiente para que la spec describa el estado real y use el vocabulario de `CONTEXT.md` y los ADRs.
-2. Detectar el tracker configurado. Si no existe, preparar Markdown local y explicar la sustitución; no asumir una plataforma.
-3. Proponer seams de test concretos, preferentemente interfaces públicas ya existentes. Explicar qué comportamientos cubrirá cada uno y confirmar la decisión con el usuario antes de publicar.
-4. Redactar con esta estructura: `## Problema`, `## Solución`, `## Historias de usuario`, `## Decisiones de implementación`, `## Decisiones de testing`, `## Fuera de alcance` y `## Notas adicionales`. Las historias deben formar una lista numerada extensa con «Como <actor>, quiero <feature>, para <beneficio>» y cubrir todos los aspectos conocidos.
-5. En implementación, registrar decisiones ya tomadas y evitar rutas o snippets frágiles. Puede incluirse un fragmento de `$prototype` solo si expresa una decisión mejor que la prosa; recortarlo y atribuirlo al prototipo.
-6. En testing, definir qué es un buen test, qué modules se probarán y qué precedentes del repositorio se seguirán.
-7. Publicar la spec en el tracker configurado y aplicar `ready-for-agent` sin triage adicional. Si no existe tracker, crear el Markdown local acordado e informar la sustitución. No cerrar ni modificar artefactos de origen.
+## Proceso
+
+1. Explorar el repo para entender el estado actual del codebase, si no se ha hecho ya. Usar el vocabulario del glosario de dominio del proyecto a lo largo de toda la spec, y respetar cualquier ADR del área que se está tocando.
+
+2. Esbozar los seams en los que se va a testear la feature. Preferir los seams existentes a los nuevos. Usar el seam más alto posible. Si se necesitan seams nuevos, proponerlos en el punto más alto que se pueda. Cuantos menos seams en el codebase, mejor — el número ideal es uno.
+
+Comprobar con el usuario que estos seams coinciden con sus expectativas.
+
+3. Escribir la spec usando la plantilla de abajo y publicarla en el issue tracker del proyecto. Aplicar la etiqueta de triage `ready-for-agent` — no hace falta triage adicional.
+
+<spec-template>
+
+## Enunciado del problema
+
+El problema que enfrenta el usuario, desde la perspectiva del usuario.
+
+## Solución
+
+La solución al problema, desde la perspectiva del usuario.
+
+## Historias de usuario
+
+Una lista LARGA y numerada de historias de usuario. Cada historia de usuario debe tener el formato:
+
+1. Como <actor>, quiero <feature>, para <beneficio>
+
+<user-story-example>
+1. Como cliente de banca móvil, quiero ver el saldo de mis cuentas, para tomar decisiones mejor informadas sobre mis gastos
+</user-story-example>
+
+Esta lista de historias de usuario debe ser extremadamente extensa y cubrir todos los aspectos de la feature.
+
+## Decisiones de implementación
+
+Una lista de las decisiones de implementación tomadas. Puede incluir:
+
+- Los módulos que se construirán/modificarán
+- Las interfaces de esos módulos que se modificarán
+- Aclaraciones técnicas del desarrollador
+- Decisiones arquitectónicas
+- Cambios de schema
+- Contratos de API
+- Interacciones específicas
+
+NO incluir rutas de archivos específicas ni snippets de código. Pueden quedar desactualizados muy rápido.
+
+Excepción: si un prototipo produjo un snippet que codifica una decisión con más precisión que la prosa (máquina de estados, reducer, schema, forma de un tipo), inlinearlo dentro de la decisión relevante y anotar brevemente que vino de un prototipo. Recortar a las partes ricas en decisión — no una demo funcional, solo lo importante.
+
+## Decisiones de testing
+
+Una lista de las decisiones de testing tomadas. Incluir:
+
+- Una descripción de qué hace bueno a un test (testear solo comportamiento externo, no detalles de implementación)
+- Qué módulos se testearán
+- Prior art para los tests (es decir, tests de tipo similar en el codebase)
+
+## Fuera de alcance
+
+Una descripción de las cosas que quedan fuera del alcance de esta spec.
+
+## Notas adicionales
+
+Cualquier nota adicional sobre la feature.
+
+</spec-template>

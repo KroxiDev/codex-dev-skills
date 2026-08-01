@@ -1,0 +1,7 @@
+interface:
+  display_name: "Caveman"
+  short_description: "Respuestas ultracomprimidas sin perder exactitud"
+  default_prompt: "Usa $caveman para responder de forma comprimida a partir de ahora."
+
+policy:
+  allow_implicit_invocation: false

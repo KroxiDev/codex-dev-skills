@@ -152,6 +152,27 @@ test("rechaza enlaces locales rotos", () => {
   assert.match(result.output, /enlace local inexistente/);
 });
 
+test("ignora enlaces dentro de bloques y spans de código", () => {
+  const files = validSkill({
+    ".agents/skills/demo/SKILL.md": [
+      "---",
+      "name: demo",
+      "description: Texto válido.",
+      "---",
+      "",
+      "Escribir `ver [README.md](./README.md) antes de importar`.",
+      "",
+      "```markdown",
+      "- [<título>](enlace) — <resumen>",
+      "```",
+      "",
+    ].join("\n"),
+  });
+  const result = runValidator(createRepository(files));
+
+  assert.equal(result.status, 0, result.output);
+});
+
 test("detecta que open_url no silencie el caso sin navegador", () => {
   const template = join(
     process.cwd(),

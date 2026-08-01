@@ -1,7 +1,0 @@
-interface:
-  display_name: "Crear un handoff"
-  short_description: "Resume contexto para otra sesión"
-  default_prompt: "Usa $handoff para preparar un documento de transferencia."
-
-policy:
-  allow_implicit_invocation: false

@@ -1,13 +1,29 @@
 ---
 name: batch-grill-me
-description: Entrevista por rondas preguntando todo el frontier de decisiones disponible. Usar cuando el usuario invoque explícitamente el skill para precisar un diseño con preguntas agrupadas.
+description: Una entrevista sin descanso que hace todas las preguntas del frontier a la vez, ronda a ronda.
+disable-model-invocation: true
 ---
 
-# Entrevista por lotes
+Ejecutar una sesión de `grilling`, pero por **rondas** en vez de pregunta a pregunta. Todo lo que fija `grilling` sigue vigente: los hechos se buscan y las decisiones se preguntan, cada pregunta lleva adjunta tu respuesta recomendada, y no se actúa hasta que el usuario confirme el entendimiento compartido. Lo único que cambia es el ritmo.
 
-1. Representar el problema como un árbol de decisiones.
-2. Calcular el frontier: preguntas cuyas dependencias ya están resueltas.
-3. Preguntar todo el frontier en una lista numerada e incluir una respuesta recomendada por pregunta.
-4. Esperar respuestas, actualizar el árbol y repetir.
-5. Investigar hechos disponibles en el workspace sin trasladárselos al usuario. Si una pregunta del frontier depende de un hecho, lanzar un subagente para obtenerlo y continuar con las demás preguntas; dejar en espera solo las ramas que dependan de esa exploración.
-6. Terminar cuando el frontier esté vacío y el usuario confirme el entendimiento compartido. No implementar automáticamente.
+Mapear el trabajo como un **árbol de diseño**: cada decisión se ramifica en las decisiones que cuelgan de ella. El **frontier** es cada decisión cuyos prerrequisitos ya están resueltos — las preguntas que puedes hacer *ahora* sin adivinar respuestas que aún no has oído.
+
+## La ronda
+
+Una ronda es todo el frontier de una vez. Numerar cada pregunta, adjuntarle su respuesta recomendada, y esperar al usuario antes de la siguiente.
+
+**Una ronda está lista para enviarse cuando** cada decisión desbloqueada del frontier está numerada y lleva su respuesta recomendada. Una pregunta cuya respuesta depende de otra aún abierta en esta ronda pertenece a una ronda *posterior*, no a esta.
+
+Cada ronda respondida remodela el árbol: las decisiones resueltas empujan el frontier hacia afuera y desbloquean las preguntas que dependían de ellas. Recalcular el frontier y enviar la siguiente ronda.
+
+### Respuestas parciales
+
+Cuando el usuario deja preguntas sin responder, volver a hacerlas en la ronda siguiente. La excepción es que lo que sí respondió cambie el contexto de la pregunta omitida: entonces reformularla contra ese contexto nuevo, o retirarla si ha quedado resuelta — y decir cuál de las dos cosas hiciste.
+
+### Hechos por subagente
+
+Cuando una pregunta del frontier necesite un hecho del entorno (filesystem, herramientas, etc.), despachar un subagente que lo encuentre. Una exploración en curso es un prerrequisito sin resolver: solo las preguntas aguas abajo de ella esperan su reporte — el resto del frontier sale en esta ronda.
+
+## Fin de la sesión
+
+La sesión termina cuando el frontier está vacío: cada rama del árbol de diseño visitada, nada dejado asumido en silencio.

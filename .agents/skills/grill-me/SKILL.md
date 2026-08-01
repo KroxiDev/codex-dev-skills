@@ -1,8 +1,7 @@
 ---
 name: grill-me
-description: Inicia una entrevista rigurosa para precisar un plan o diseño. Usar cuando el usuario invoque explícitamente el skill y quiera ser interrogado una pregunta por vez.
+description: Una entrevista sin descanso para afilar un plan o diseño.
+disable-model-invocation: true
 ---
 
-# Entrevistar al usuario
-
-Aplicar `$grilling` hasta alcanzar y confirmar un entendimiento compartido. No implementar automáticamente el resultado.
+Ejecutar una sesión de `grilling`.

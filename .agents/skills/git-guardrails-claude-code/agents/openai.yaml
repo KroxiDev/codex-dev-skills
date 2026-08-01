@@ -1,0 +1,7 @@
+interface:
+  display_name: "Guardrails de Git para Claude Code"
+  short_description: "Instala hooks PreToolUse que bloquean git peligroso"
+  default_prompt: "Usa $git-guardrails-claude-code para configurar los hooks de Claude Code."
+
+policy:
+  allow_implicit_invocation: false

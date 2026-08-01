@@ -1,4 +1,0 @@
-interface:
-  display_name: "Gestionar Obsidian"
-  short_description: "Busca y organiza notas con wikilinks"
-  default_prompt: "Usa $obsidian-vault para organizar estas notas."

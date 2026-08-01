@@ -1,56 +1,56 @@
 #!/usr/bin/env bash
 #
-# Un wizard guía a una persona por un procedimiento manual paso a paso.
-# Generado por el skill $wizard.
+# Un wizard — guía a un humano por un procedimiento manual paso a paso.
+# Generado por el skill wizard.
 #
-# Todo lo anterior al marcador "STAGES" es la biblioteca: no editarlo a mano.
-# Definir las etapas específicas debajo del marcador.
+# Todo lo anterior al marcador "STAGES" es la biblioteca del wizard: no
+# editarla a mano. Redactar las etapas de cada paso debajo del marcador.
 
 set -euo pipefail
 
 # ──────────────────────────────────────────────────────────────────────────
-# Biblioteca del wizard: UX consistente en todos los scripts.
+# Biblioteca del wizard — UX agradable y consistente. Idéntica en todo wizard.
 # ──────────────────────────────────────────────────────────────────────────
 
 if [[ -t 1 ]] && command -v tput >/dev/null 2>&1 && [[ "$(tput colors 2>/dev/null || echo 0)" -ge 8 ]]; then
   BOLD=$(tput bold); DIM=$(tput dim); RESET=$(tput sgr0)
-  BLUE=$(tput setaf 4); GREEN=$(tput setaf 2); YELLOW=$(tput setaf 3)
+  BLUE=$(tput setaf 4); GREEN=$(tput setaf 2); YELLOW=$(tput setaf 3); RED=$(tput setaf 1)
 else
-  BOLD=""; DIM=""; RESET=""; BLUE=""; GREEN=""; YELLOW=""
+  BOLD=""; DIM=""; RESET=""; BLUE=""; GREEN=""; YELLOW=""; RED=""
 fi
 
-# Author sets these two at the top of the stages section.
+# El autor fija estos dos al principio de la sección de etapas.
 TOTAL_STAGES=0
 TOTAL_MINUTES=0
 
 _STAGE_INDEX=0
 _MINUTES_ELAPSED=0
 ENV_FILE="${ENV_FILE:-.env}"
-WRITTEN_ENV=()    # KEYs written to ENV_FILE this run
-WRITTEN_SECRET=() # secret NAMEs set this run
-SKIPPED=()        # things we couldn't do (e.g. gh missing)
+WRITTEN_ENV=()    # KEYs escritas en ENV_FILE en esta ejecución
+WRITTEN_SECRET=() # NAMEs de secrets configurados en esta ejecución
+SKIPPED=()        # cosas que no se pudieron hacer (p. ej. falta gh)
 
-# _clear — wipe the terminal so only the current step is on screen. No-op when
-# output isn't a terminal, so piped logs stay readable.
+# _clear — limpia la terminal para que solo el paso actual esté en pantalla.
+# No hace nada cuando la salida no es una terminal, así los logs siguen legibles.
 _clear() {
   [[ -t 1 ]] || return 0
   if command -v tput >/dev/null 2>&1; then tput clear; else printf '\033[2J\033[3J\033[H'; fi
 }
 
-# banner "Title" — opening frame: what this wizard does and how long it takes.
+# banner "Título" — marco de apertura: qué hace este wizard y cuánto tarda.
 banner() {
   _clear
   printf '\n%s%s  %s%s\n' "$BOLD" "$BLUE" "$1" "$RESET"
-  printf '%s  %s etapas · aproximadamente %s minutos%s\n\n' \
+  printf '%s  %s etapas · unos %s minutos%s\n\n' \
     "$DIM" "$TOTAL_STAGES" "$TOTAL_MINUTES" "$RESET"
-  printf '%s  Tú controlas el navegador; el wizard indica cada acción y\n' "$DIM"
-  printf '  captura los valores. Detén con Ctrl-C y vuelve a ejecutar cuando quieras;\n'
-  printf '  conservará los valores ya guardados.%s\n' "$RESET"
-  pause "¿Listo para comenzar?"
+  printf '%s  Tú manejas el navegador; este wizard te dice exactamente qué hacer y\n' "$DIM"
+  printf '  captura los valores que copies de vuelta. Para en cualquier momento con Ctrl-C\n'
+  printf '  y vuelve a ejecutarlo después — recuerda los valores ya guardados.%s\n' "$RESET"
+  pause "¿Listo para empezar?"
 }
 
-# stage "Name" <minutes> — clear the screen, then announce a stage and show
-# progress + time remaining. Clearing keeps only the current step on screen.
+# stage "Nombre" <minutos> — limpia la pantalla, anuncia una etapa y muestra
+# progreso + tiempo restante. Limpiar mantiene solo el paso actual en pantalla.
 stage() {
   _clear
   _STAGE_INDEX=$((_STAGE_INDEX + 1))
@@ -61,17 +61,19 @@ stage() {
     "$BOLD" "$BLUE" "$_STAGE_INDEX" "$TOTAL_STAGES" "$1" "$RESET" "$DIM" "$remaining" "$RESET"
 }
 
-# say "..." — a plain instruction line.
+# say "..." — una línea de instrucción simple.
 say()  { printf '  %s\n' "$1"; }
-# step "..." — a numbered-feeling action the human takes in the browser.
+# step "..." — una acción con aire numerado que el humano hace en el navegador.
 step() { printf '  %s•%s %s\n' "$BLUE" "$RESET" "$1"; }
 note() { printf '  %s%s%s\n' "$DIM" "$1" "$RESET"; }
 warn() { printf '  %s⚠ %s%s\n' "$YELLOW" "$1" "$RESET"; }
 
-# open_url URL — open in the human's browser, cross-platform incl. WSL.
+# open_url URL — abre en el navegador del humano, multiplataforma incl. WSL.
 open_url() {
   local url="$1"
   printf '  %s↗ abriendo%s %s\n' "$GREEN" "$RESET" "$url"
+  # El aviso queda fuera de cualquier redirección: si no hay navegador, el humano
+  # tiene que verlo. Silenciarlo deja al wizard esperando sobre una pantalla vacía.
   if command -v wslview >/dev/null 2>&1; then
     wslview "$url" >/dev/null 2>&1 || warn "no se pudo abrir el navegador; visita manualmente: $url"
   elif command -v explorer.exe >/dev/null 2>&1; then
@@ -85,13 +87,13 @@ open_url() {
   fi
 }
 
-# pause "msg" — wait for the human to confirm they've done the manual part.
+# pause "msg" — espera a que el humano confirme que hizo la parte manual.
 pause() {
   printf '  %s%s%s ' "$DIM" "${1:-Presiona Enter para continuar}" "$RESET"
   read -r _ || true
 }
 
-# confirm "question" — y/N gate; returns success on yes.
+# confirm "pregunta" — compuerta s/N; devuelve éxito con un sí.
 confirm() {
   local reply=""
   printf '  %s? %s [s/N] ' "$YELLOW" "$1"
@@ -99,20 +101,20 @@ confirm() {
   [[ "$reply" =~ ^[SsYy] ]]
 }
 
-# _existing KEY — current value of KEY in ENV_FILE, if any.
+# _existing KEY — valor actual de KEY en ENV_FILE, si lo hay.
 _existing() {
   [[ -f "$ENV_FILE" ]] || return 1
   local line; line=$(grep -E "^${1}=" "$ENV_FILE" | tail -n1) || return 1
   printf '%s' "${line#*=}"
 }
 
-# ask KEY "Prompt" — read a value into $KEY. Offers the existing .env value as
-# a default on re-runs (Enter keeps it). Visible input (non-secret).
+# ask KEY "Prompt" — lee un valor en $KEY. Ofrece el valor existente del .env
+# como default en re-ejecuciones (Enter lo conserva). Entrada visible (no secreta).
 ask() {
   local key="$1" prompt="$2" current input
   current=$(_existing "$key" || true)
   if [[ -n "$current" ]]; then
-    printf '  %s%s%s %s[Enter conserva el valor actual]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
+    printf '  %s%s%s %s[Enter conserva el actual]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
   else
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
@@ -121,12 +123,12 @@ ask() {
   printf -v "$key" '%s' "$input"
 }
 
-# ask_secret KEY "Prompt" — like ask, but input is hidden.
+# ask_secret KEY "Prompt" — como ask, pero la entrada va oculta.
 ask_secret() {
   local key="$1" prompt="$2" current input
   current=$(_existing "$key" || true)
   if [[ -n "$current" ]]; then
-    printf '  %s%s%s %s[Enter conserva el valor actual]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
+    printf '  %s%s%s %s[Enter conserva el actual]%s ' "$BOLD" "$prompt" "$RESET" "$DIM" "$RESET"
   else
     printf '  %s%s%s ' "$BOLD" "$prompt" "$RESET"
   fi
@@ -136,8 +138,8 @@ ask_secret() {
   printf -v "$key" '%s' "$input"
 }
 
-# write_env KEY VALUE — upsert KEY=VALUE into ENV_FILE (creates it; replaces
-# any existing line). Idempotent.
+# write_env KEY VALUE — upsert de KEY=VALUE en ENV_FILE (lo crea; reemplaza
+# cualquier línea existente). Idempotente.
 write_env() {
   local key="$1" value="$2" tmp
   touch "$ENV_FILE"
@@ -146,18 +148,13 @@ write_env() {
   printf '%s=%s\n' "$key" "$value" >> "$tmp"
   mv "$tmp" "$ENV_FILE"
   WRITTEN_ENV+=("$key")
-  printf '  %s✓ guardado%s %s → %s\n' "$GREEN" "$RESET" "$key" "$ENV_FILE"
+  printf '  %s✓ escrito%s %s → %s\n' "$GREEN" "$RESET" "$key" "$ENV_FILE"
 }
 
-# set_secret NAME VALUE — set a GitHub Actions repo secret via gh. Falls back
-# to a warning (and records it) if gh is unavailable or unauthenticated.
+# set_secret NAME VALUE — configura un secret de repo de GitHub Actions vía gh.
+# Cae a un aviso (y lo registra) si gh no está disponible o autenticado.
 set_secret() {
   local name="$1" value="$2"
-  if ! confirm "¿Autorizar escritura del secret de GitHub $name?"; then
-    SKIPPED+=("Secret de GitHub $name")
-    warn "secret de GitHub omitido por decisión del usuario"
-    return
-  fi
   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
     if printf '%s' "$value" | gh secret set "$name" >/dev/null 2>&1; then
       WRITTEN_SECRET+=("$name")
@@ -165,18 +162,13 @@ set_secret() {
       return
     fi
   fi
-  SKIPPED+=("Secret de GitHub $name (configurar manualmente: gh secret set $name)")
-  warn "secret de GitHub omitido: gh no está listo"
+  SKIPPED+=("Secret de GitHub $name (configúralo manualmente: gh secret set $name)")
+  warn "omitido el secret de GitHub $name — gh no está listo; configúralo después"
 }
 
-# set_var NAME VALUE — set a GitHub Actions repo variable (non-secret).
+# set_var NAME VALUE — configura una variable de repo de GitHub Actions (no secreta).
 set_var() {
   local name="$1" value="$2"
-  if ! confirm "¿Autorizar escritura de la variable de GitHub $name?"; then
-    SKIPPED+=("Variable de GitHub $name")
-    warn "variable de GitHub omitida por decisión del usuario"
-    return
-  fi
   if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
     if gh variable set "$name" --body "$value" >/dev/null 2>&1; then
       printf '  %s✓ configurada%s variable de GitHub %s\n' "$GREEN" "$RESET" "$name"
@@ -184,25 +176,25 @@ set_var() {
     fi
   fi
   SKIPPED+=("Variable de GitHub $name")
-  warn "variable de GitHub omitida: gh no está listo"
+  warn "omitida la variable de GitHub $name — gh no está listo; configúrala después"
 }
 
-# finish — clear, then a closing summary of everything configured.
+# finish — limpia, y luego un resumen de cierre de todo lo configurado.
 finish() {
   _clear
-  printf '\n%s%s  ✓ Configuración terminada%s\n' "$BOLD" "$GREEN" "$RESET"
-  (( ${#WRITTEN_ENV[@]} ))    && note "guardados ${#WRITTEN_ENV[@]} valores en $ENV_FILE: ${WRITTEN_ENV[*]}"
+  printf '\n%s%s  ✓ Configuración completa%s\n' "$BOLD" "$GREEN" "$RESET"
+  (( ${#WRITTEN_ENV[@]} ))    && note "escritos ${#WRITTEN_ENV[@]} valores en $ENV_FILE: ${WRITTEN_ENV[*]}"
   (( ${#WRITTEN_SECRET[@]} )) && note "configurados ${#WRITTEN_SECRET[@]} secrets de GitHub: ${WRITTEN_SECRET[*]}"
   if (( ${#SKIPPED[@]} )); then
-    printf '\n'; warn "pendiente de forma manual:"
+    printf '\n'; warn "pendiente de hacer a mano:"
     for s in "${SKIPPED[@]}"; do note "  - $s"; done
   fi
   printf '\n'
 }
 
 # ──────────────────────────────────────────────────────────────────────────
-# STAGES — author this section. One stage() per step the human takes.
-# Replace the example below. Set the two totals to match the stages you write.
+# STAGES — redactar esta sección. Un stage() por paso que da el humano.
+# Reemplazar el ejemplo de abajo. Fijar los dos totales según las etapas escritas.
 # ──────────────────────────────────────────────────────────────────────────
 
 TOTAL_STAGES=1
@@ -210,17 +202,17 @@ TOTAL_MINUTES=5
 
 banner "Configuración de Stripe"
 
-# ── Example stage: replace with your real steps ───────────────────────────
+# ── Etapa de ejemplo: reemplazar con tus pasos reales ─────────────────────
 stage "Stripe — API keys" 5
-say "Obtendremos las claves de test de Stripe para desarrollo local y CI."
+say "Vamos a tomar tus claves de test de Stripe y guardarlas para dev local + CI."
 open_url "https://dashboard.stripe.com/test/apikeys"
-step "En la página de API keys, copia la clave publicable (comienza con pk_test_)."
-ask STRIPE_PUBLISHABLE_KEY "Pega la clave publicable:"
-step "Haz clic en 'Reveal test key' en la fila Secret key y cópiala."
+step "En la página de API keys, copia la Publishable key (empieza por pk_test_)."
+ask STRIPE_PUBLISHABLE_KEY "Pega la publishable key:"
+step "Haz clic en 'Reveal test key' en la fila Secret key, y cópiala."
 ask_secret STRIPE_SECRET_KEY "Pega la secret key:"
 write_env STRIPE_PUBLISHABLE_KEY "$STRIPE_PUBLISHABLE_KEY"
 write_env STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"
-set_secret STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"   # CI needs this one
+set_secret STRIPE_SECRET_KEY "$STRIPE_SECRET_KEY"   # CI necesita este
 # ──────────────────────────────────────────────────────────────────────────
 
 finish

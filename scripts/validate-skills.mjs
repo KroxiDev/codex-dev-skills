@@ -120,6 +120,11 @@ function scalar(block, key) {
   return value;
 }
 
+// Los bloques y spans de código contienen plantillas de ejemplo, no enlaces reales.
+function withoutCode(text) {
+  return text.replace(/^```[\s\S]*?^```/gmu, "").replace(/`[^`\n]*`/gu, "");
+}
+
 function validateSkill(root, skillDirectory, texts, errors) {
   const skillName = basename(skillDirectory);
   const skillPath = join(skillDirectory, "SKILL.md");
@@ -168,7 +173,9 @@ function validateSkill(root, skillDirectory, texts, errors) {
     );
   }
 
-  for (const match of skill.matchAll(/!?\[[^\]]*\]\(([^)]+)\)/gu)) {
+  for (const match of withoutCode(skill).matchAll(
+    /!?\[[^\]]*\]\(([^)]+)\)/gu
+  )) {
     const target = match[1].trim().replace(/^<|>$/g, "").split("#", 1)[0];
     if (
       !target ||

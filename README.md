@@ -1,26 +1,16 @@
-# Codex Dev Skills
+# Engineering Skills
 
-Colección de **41 skills** de ingeniería para [OpenAI Codex](https://developers.openai.com/codex/), adaptada a español neutro y preparada para su descubrimiento nativo.
+Colección de **31 skills** de ingeniería en español neutro, que funcionan tanto en [OpenAI Codex](https://developers.openai.com/codex/) como en [Claude Code](https://code.claude.com/docs).
 
-Cubre el ciclo completo: diseño de codebase, modelado de dominio, TDD, revisión de código, diagnóstico de bugs, planificación de trabajo grande, triage, traspasos entre tareas y escritura técnica.
+Cubre el ciclo completo: diseño de codebase, modelado de dominio, TDD, revisión de código, diagnóstico de bugs, planificación de trabajo grande, triage, traspasos entre sesiones y construcción de skills.
 
-Es la edición para Codex del mismo set publicado en [KroxiDev/claude-dev-skills](https://github.com/KroxiDev/claude-dev-skills). Las diferencias de nombres y comportamiento responden a las capacidades propias de cada sistema.
+Un solo árbol de skills sirve a ambos agentes. `SKILL.md` es el formato común; cada skill añade `agents/openai.yaml` con los metadatos de invocación de Codex, y el directorio `.claude-plugin/` empaqueta el mismo set como plugin de Claude Code.
 
 ## Instalación
 
-### Para todos tus proyectos
+### Codex
 
-En Codex, invoca el instalador incluido y pídele que instale los 41 directorios de skills del repositorio:
-
-```text
-$skill-installer Instala todos los skills de https://github.com/KroxiDev/codex-dev-skills/tree/main/.agents/skills
-```
-
-La instalación de usuario queda disponible en todos tus proyectos. Si un skill recién instalado no aparece, reinicia Codex.
-
-### Solo para un repositorio
-
-Copia `.agents/skills` dentro de la raíz del proyecto en el que quieras utilizarlos:
+**Para un repositorio.** Copia `.agents/skills` a la raíz del proyecto:
 
 ```text
 <tu-proyecto>/
@@ -29,85 +19,120 @@ Copia `.agents/skills` dentro de la raíz del proyecto en el que quieras utiliza
         └── <nombre-del-skill>/
 ```
 
-Codex busca skills desde el directorio de trabajo actual hasta la raíz del repositorio, por lo que también puedes ubicarlos en un subdirectorio si solo aplican a una parte del proyecto.
+Codex busca skills desde el directorio de trabajo hasta la raíz del repositorio, así que también valen en un subdirectorio si solo aplican a una parte del proyecto.
 
-## Uso
+**Para todos tus proyectos.** Copia los directorios de skills a `~/.codex/skills/`. Si un skill recién instalado no aparece, reinicia Codex.
 
-Los skills marcados como `auto` pueden activarse cuando la descripción coincide con la tarea. Todos se pueden invocar explícitamente escribiendo `$nombre-del-skill` en el prompt.
+### Claude Code
 
-| Skill                           | Invocación                          | Descripción                                                                             |
-| :------------------------------ | :---------------------------------- | :-------------------------------------------------------------------------------------- |
-| `batch-grill-me`                | `$batch-grill-me`                   | Entrevista por rondas que pregunta todo el frontier de decisiones disponible.           |
-| `code-review`                   | auto + `$code-review`               | Revisa un diff contra los estándares del repositorio y la especificación de origen.     |
-| `codebase-design`               | auto + `$codebase-design`           | Proporciona vocabulario y criterios para diseñar deep modules.                          |
-| `codex-handoff`                 | `$codex-handoff`                    | Transfiere el contexto actual a una nueva tarea de Codex.                               |
-| `continue-task`                 | `$continue-task`                    | Genera un prompt breve para continuar la tarea en otra sesión del mismo workspace.      |
-| `design-an-interface`           | auto + `$design-an-interface`       | Diseña varias interfaces radicalmente distintas para un module y las compara.           |
-| `diagnosing-bugs`               | auto + `$diagnosing-bugs`           | Diagnostica bugs difíciles y regresiones de rendimiento mediante un bucle reproducible. |
-| `domain-modeling`               | auto + `$domain-modeling`           | Construye y precisa el modelo de dominio de un proyecto.                                |
-| `edit-article`                  | `$edit-article`                     | Mejora la estructura, claridad y concisión de un artículo.                              |
-| `git-guardrails-codex`          | auto + `$git-guardrails-codex`      | Añade guardrails contra operaciones de Git peligrosas en sesiones de Codex.             |
-| `grill-me`                      | `$grill-me`                         | Inicia una entrevista rigurosa, una pregunta por vez, para precisar un plan o diseño.   |
-| `grill-with-docs`               | `$grill-with-docs`                  | Entrevista intensivamente mientras mantiene documentos de dominio y decisiones.         |
-| `grilling`                      | auto + `$grilling`                  | Somete un plan, decisión o idea a una entrevista rigurosa.                              |
-| `handoff`                       | `$handoff`                          | Resume la conversación en un documento de transferencia para otro agente.               |
-| `implement`                     | `$implement`                        | Implementa trabajo definido por una spec o tickets con TDD y revisión.                  |
-| `improve-codebase-architecture` | `$improve-codebase-architecture`    | Busca oportunidades para profundizar modules y presenta un informe visual.              |
-| `loop-me`                       | `$loop-me`                          | Diseña specs de workflows recurrentes mediante una entrevista con estado.               |
-| `migrate-to-shoehorn`           | auto + `$migrate-to-shoehorn`       | Migra fixtures de test desde assertions `as` a `@total-typescript/shoehorn`.            |
-| `obsidian-vault`                | auto + `$obsidian-vault`            | Busca, crea y organiza notas de Obsidian con wikilinks e índices.                       |
-| `prototype`                     | auto + `$prototype`                 | Construye un prototipo descartable para responder una pregunta de diseño.               |
-| `qa`                            | auto + `$qa`                        | Conduce una sesión conversacional de QA y convierte los hallazgos en issues durables.   |
-| `recommend-codex-model`         | `$recommend-codex-model`            | Estima la dificultad de una tarea y recomienda un modelo y esfuerzo de GPT-5.6.         |
-| `request-refactor-plan`         | auto + `$request-refactor-plan`     | Prepara un plan de refactor incremental y lo publica como issue.                        |
-| `research`                      | auto + `$research`                  | Delega investigación con fuentes primarias y guarda hallazgos citados.                  |
-| `resolving-merge-conflicts`     | auto + `$resolving-merge-conflicts` | Diagnostica y resuelve conflictos de un merge o rebase en progreso.                     |
-| `scaffold-exercises`            | auto + `$scaffold-exercises`        | Crea estructuras de ejercicios que pasan el linter de AI Hero.                          |
-| `setup-pre-commit`              | auto + `$setup-pre-commit`          | Configura Husky y lint-staged para formato, typecheck y tests.                          |
-| `setup-ts-deep-modules`         | `$setup-ts-deep-modules`            | Configura dependency-cruiser para ocultar internals detrás de entry points.             |
-| `tdd`                           | auto + `$tdd`                       | Aplica desarrollo guiado por tests con ciclos red-green en slices verticales.           |
-| `teach`                         | `$teach`                            | Mantiene un workspace educativo y enseña mediante lecciones breves y práctica.          |
-| `to-questionnaire`              | `$to-questionnaire`                 | Convierte una decisión incompleta en un cuestionario para otra persona.                 |
-| `to-spec`                       | `$to-spec`                          | Convierte la conversación y el contexto del codebase en una spec.                       |
-| `to-tickets`                    | `$to-tickets`                       | Divide una spec o plan en tickets tracer-bullet con dependencias explícitas.            |
-| `triage`                        | `$triage`                           | Clasifica y verifica issues o PRs y prepara briefs ejecutables.                         |
-| `ubiquitous-language`           | `$ubiquitous-language`              | Extrae y mantiene un glosario de lenguaje ubicuo al estilo DDD.                         |
-| `wayfinder`                     | `$wayfinder`                        | Planifica trabajo mayor que una sesión como un mapa compartido de decisiones.           |
-| `wizard`                        | `$wizard`                           | Genera un wizard Bash interactivo para procedimientos manuales o migraciones.           |
-| `writing-beats`                 | `$writing-beats`                    | Redacta un artículo desde material bruto, un beat elegido por vez.                      |
-| `writing-fragments`             | `$writing-fragments`                | Extrae fragmentos valiosos de material bruto sin imponer estructura.                    |
-| `writing-great-skills`          | `$writing-great-skills`             | Proporciona principios para escribir y editar skills predecibles y concisos.            |
-| `writing-shape`                 | `$writing-shape`                    | Da forma de artículo al material bruto, párrafo por párrafo.                            |
+Dos pasos, no uno — añadir el marketplace registra el catálogo, pero hasta instalar el plugin no tienes ningún skill activo:
+
+```text
+/plugin marketplace add KroxiDev/engineering-skills
+/plugin install engineering-skills@kroxidev
+```
+
+El repositorio es público y el marketplace se registra por HTTPS: el clone es anónimo, no hace falta cuenta de GitHub. Una vez instalado, los skills están disponibles en todos tus proyectos.
+
+La instalación queda en el disco de esa máquina (`~/.claude/settings.json` y `~/.claude/plugins/`), no viaja con tu cuenta. Para actualizar:
+
+```text
+/plugin marketplace update kroxidev
+```
+
+> El plugin no fija `version` en su manifiesto, así que Claude Code usa el SHA del commit: cada push a `main` cuenta como versión nueva.
+
+**En [claude.ai/code](https://claude.ai/code)**, añade el marketplace al `.claude/settings.json` del repo en el que trabajes:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "kroxidev": {
+      "source": { "source": "github", "repo": "KroxiDev/engineering-skills" }
+    }
+  },
+  "enabledPlugins": { "engineering-skills@kroxidev": true }
+}
+```
+
+## Skills incluidos
+
+Los marcados `auto` se activan solos cuando la descripción encaja con la tarea. El resto solo se disparan si los invocas: `$nombre` en Codex, `/nombre` en Claude Code.
+
+| Skill                           | Invocación | Descripción                                                                           |
+| :------------------------------ | :--------- | :------------------------------------------------------------------------------------ |
+| `batch-grill-me`                | usuario    | Pregunta todo el frontier de decisiones por rondas.                                   |
+| `caveman`                       | usuario    | Respuestas ultracomprimidas sin perder exactitud técnica. Niveles lite, full y ultra. |
+| `code-review`                   | auto       | Revisa un diff en dos ejes: estándares del repo y especificación de origen.           |
+| `codebase-design`               | auto       | Vocabulario y criterios para diseñar módulos profundos.                               |
+| `continue-task`                 | usuario    | Traspasa la tarea actual a otra sesión del mismo workspace.                           |
+| `diagnosing-bugs`               | auto       | Aísla bugs difíciles y regresiones de rendimiento con un bucle reproducible.          |
+| `domain-modeling`               | auto       | Construye y afila el modelo de dominio: glosario, contexto y ADRs.                    |
+| `git-guardrails-claude-code`    | ver nota   | Instala hooks `PreToolUse` de Claude Code que bloquean git peligroso.                 |
+| `git-guardrails-codex`          | auto       | Protege Git en sesiones de Codex vía política en `AGENTS.md` y un verificador manual. |
+| `grill-me`                      | usuario    | Entrevista rigurosa, una pregunta por vez, para afilar un plan o diseño.              |
+| `grill-with-docs`               | usuario    | Como `grill-me`, creando ADRs y glosario sobre la marcha.                             |
+| `grilling`                      | auto       | Interroga un plan, decisión o idea hasta el entendimiento compartido.                 |
+| `implement`                     | usuario    | Implementa una spec o un set de tickets con TDD y revisión.                           |
+| `improve-codebase-architecture` | usuario    | Escanea el codebase buscando oportunidades de profundización y las reporta en HTML.   |
+| `loop-me`                       | usuario    | Entrevista sobre las specs de los workflows recurrentes que quieres construir.        |
+| `migrate-to-shoehorn`           | auto       | Migra tests de type assertions `as` a `@total-typescript/shoehorn`.                   |
+| `prototype`                     | auto       | Construye un prototipo descartable para responder una pregunta de diseño.             |
+| `qa`                            | usuario    | Sesión conversacional de QA que publica los bugs como issues.                         |
+| `request-refactor-plan`         | usuario    | Plan de refactor en commits diminutos, publicado como issue.                          |
+| `research`                      | auto       | Investiga contra fuentes primarias y captura los hallazgos como Markdown.             |
+| `resolving-merge-conflicts`     | auto       | Resuelve un conflicto de merge o rebase en progreso.                                  |
+| `setup-pre-commit`              | auto       | Configura Husky con lint-staged, typecheck y tests.                                   |
+| `setup-ts-deep-modules`         | usuario    | Conecta dependency-cruiser para ocultar internals detrás de entry points.             |
+| `tdd`                           | auto       | Desarrollo guiado por tests, en ciclos red-green-refactor.                            |
+| `teach`                         | usuario    | Enseña un skill o concepto nuevo dentro de este workspace.                            |
+| `to-spec`                       | usuario    | Convierte la conversación en una spec y la publica en el issue tracker.               |
+| `to-tickets`                    | usuario    | Divide un plan en tickets tracer-bullet con sus aristas de bloqueo.                   |
+| `triage`                        | usuario    | Mueve issues y PRs externas por una máquina de estados de triage.                     |
+| `wayfinder`                     | usuario    | Planifica trabajo mayor que una sesión como un mapa de tickets de decisión.           |
+| `wizard`                        | usuario    | Genera un wizard Bash interactivo para procedimientos manuales.                       |
+| `writing-great-skills`          | usuario    | Referencia para escribir y editar skills predecibles.                                 |
+
+### Los dos skills de guardrails
+
+`git-guardrails-claude-code` y `git-guardrails-codex` no son traducciones uno del otro: usan mecanismos distintos porque los agentes ofrecen cosas distintas.
+
+- El de **Claude Code** escribe un hook `PreToolUse` que bloquea el comando antes de ejecutarlo. Es cumplimiento real, y no existe fuera de Claude Code — por eso está marcado como explícito en Codex, para que nunca se auto-invoque allí.
+- El de **Codex** escribe una política en `AGENTS.md` más un verificador manual. Es más débil (instrucción, no bloqueo), pero el bloque de `AGENTS.md` también lo lee Claude.
 
 ### Nota de procedencia
 
-La colección adapta skills de [mattpocock/skills](https://github.com/mattpocock/skills) al formato y las capacidades de Codex. `qa` y `request-refactor-plan` están deprecados en el repositorio original, pero se conservan completos y traducidos porque siguen siendo útiles.
+La mayoría de los skills adaptan [mattpocock/skills](https://github.com/mattpocock/skills) al español neutro. `qa` y `request-refactor-plan` están deprecados en el repositorio original, pero se conservan completos porque siguen siendo útiles. Gracias a **Matt Pocock** por el original.
 
-`recommend-codex-model` es propio de esta colección. `codex-handoff` y `git-guardrails-codex` sustituyen a las variantes específicas de Claude mediante capacidades equivalentes de Codex.
+`caveman` es una adaptación del skill [caveman](https://github.com/JuliusBrussee/caveman) de **Julius Brussee** (MIT). Se mantienen el nombre y los nombres de los niveles, se restringe la invocación al usuario, y se retiran los tres modos `wenyan` (compresión en chino clásico), que no aportan nada a un set en español.
 
 ## Estructura
 
 ```text
-codex-dev-skills/
-└── .agents/
-    └── skills/
-        └── <nombre>/
-            ├── SKILL.md             # frontmatter + instrucciones
-            ├── agents/openai.yaml   # metadatos e invocación
-            ├── references/          # material de apoyo bajo demanda
-            ├── scripts/             # scripts ejecutables
-            └── assets/              # plantillas y configuración
+engineering-skills/
+├── .agents/skills/<nombre>/
+│   ├── SKILL.md             # frontmatter + instrucciones
+│   ├── agents/openai.yaml   # metadatos e invocación en Codex
+│   ├── references/          # material de apoyo bajo demanda
+│   ├── scripts/             # scripts ejecutables
+│   └── assets/              # plantillas y configuración
+├── .claude-plugin/
+│   ├── plugin.json          # manifiesto del plugin, apunta a .agents/skills
+│   └── marketplace.json     # catálogo, para instalar por marketplace
+├── scripts/validate-skills.mjs
+└── tests/validate-skills.test.mjs
 ```
 
-Cada skill requiere un `SKILL.md`. Los demás directorios y archivos son opcionales y solo aparecen cuando el workflow los necesita.
+Cada skill requiere `SKILL.md` y `agents/openai.yaml`. Los demás directorios son opcionales y solo aparecen cuando el workflow los necesita.
+
+`.agents/skills/` es fuente única para ambos agentes: Codex lo descubre por convención, y `plugin.json` lo declara como ruta de skills del plugin. En Claude Code una ruta custom de skills **suma** al `skills/` por defecto en vez de reemplazarlo, así que no hay nada duplicado ni que sincronizar.
 
 ## Desarrollo
 
-1. Instala las dependencias con `npm install`.
-2. Ejecuta `npm run validate:skills` para validar UTF-8, frontmatter, metadatos, finales de línea y enlaces locales.
-3. Ejecuta `npm test` para comprobar el validador y las regresiones conocidas.
-
-`npm install` también activa un hook pre-commit que formatea los archivos staged y ejecuta ambas validaciones.
+1. `npm install` — instala dependencias y activa el hook pre-commit.
+2. `npm run validate:skills` — valida UTF-8, LF, frontmatter, metadatos y enlaces locales.
+3. `npm test` — comprueba el validador y las regresiones conocidas.
+4. `claude plugin validate .` — valida los manifiestos del plugin de Claude Code.
 
 ## Licencia
 

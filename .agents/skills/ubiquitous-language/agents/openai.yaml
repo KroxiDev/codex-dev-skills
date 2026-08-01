@@ -1,7 +1,0 @@
-interface:
-  display_name: "Lenguaje ubicuo"
-  short_description: "Mantiene un glosario de dominio"
-  default_prompt: "Usa $ubiquitous-language para definir el lenguaje del dominio."
-
-policy:
-  allow_implicit_invocation: false

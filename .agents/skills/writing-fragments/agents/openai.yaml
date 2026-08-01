@@ -1,7 +1,0 @@
-interface:
-  display_name: "Explorar fragmentos"
-  short_description: "Extrae fragmentos sin imponer estructura"
-  default_prompt: "Usa $writing-fragments para explorar estas notas."
-
-policy:
-  allow_implicit_invocation: false

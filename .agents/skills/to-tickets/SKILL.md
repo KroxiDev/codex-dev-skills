@@ -1,15 +1,107 @@
 ---
 name: to-tickets
-description: Divide una spec, plan o conversación en tickets tracer-bullet con dependencias explícitas y los publica en el tracker configurado. Usar cuando el usuario invoque explícitamente el skill para crear slices verticales ejecutables.
+description: Divide un plan, una spec o la conversación actual en un conjunto de tickets tracer-bullet, cada uno declarando sus aristas de bloqueo, publicados en el tracker configurado — aristas como texto en un archivo por ticket en local, o enlaces de bloqueo nativos en un tracker real.
+disable-model-invocation: true
 ---
 
-# Convertir a tickets
+# A tickets
 
-1. Leer por completo la conversación, spec, issue o URL de origen.
-2. Inspeccionar el codebase cuando sea necesario, usar el vocabulario del dominio y respetar ADRs. Detectar prefactors que permitan «hacer fácil el cambio y luego hacer el cambio fácil».
-3. Diseñar tracer bullets verticales: cada ticket debe recorrer todas las capas necesarias, entregar comportamiento demostrable por sí solo y caber en una sesión nueva.
-4. Declarar «Bloqueado por» con dependencias reales. Un ticket sin bloqueos puede empezar de inmediato.
-5. Para un refactor mecánico cuyo blast radius no permita slices verdes, usar expand–contract: añadir la forma nueva junto a la antigua; migrar callers en lotes verdes; eliminar la forma antigua cuando todos terminen. Si ni los lotes pueden mantenerse verdes, usar un branch de integración y un ticket final de verificación.
-6. Presentar una lista numerada con título, bloqueos y comportamiento entregado. Preguntar si la granularidad y las dependencias son correctas y si debe fusionarse o dividirse algo; iterar hasta recibir aprobación.
-7. Tras aprobar el desglose, publicar un artefacto por ticket en orden de dependencia. En tracker real, usar relaciones nativas de bloqueo cuando existan y aplicar el estado `ready-for-agent`. Sin tracker, crear `.scratch/<feature>/issues/<NN>-<slug>.md` con `Qué construir`, `Bloqueado por`, `Estado` y criterios de aceptación.
-8. Evitar rutas y snippets que se vuelvan obsoletos, salvo fragmentos mínimos de un prototipo que codifiquen una decisión. No cerrar ni modificar el issue padre.
+Dividir un plan, spec o conversación en un conjunto de **tickets** — slices verticales de bala trazadora, cada uno declarando los tickets que lo **bloquean**.
+
+El issue tracker y el vocabulario de etiquetas de triage deberían estar ya configurados (p. ej. en `docs/agents/issue-tracker.md`) — si no, preguntar al usuario qué tracker usa.
+
+## Proceso
+
+### 1. Reunir contexto
+
+Trabajar con lo que ya esté en el contexto de la conversación. Si el usuario pasa una referencia (una ruta de spec, un número de issue o URL) como argumento, obtenerla y leer su cuerpo y comentarios completos.
+
+### 2. Explorar el codebase (opcional)
+
+Si aún no se ha explorado el codebase, hacerlo para entender el estado actual del código. Los títulos y descripciones de los tickets deben usar el vocabulario del glosario de dominio del proyecto, y respetar los ADRs del área que se está tocando.
+
+Buscar oportunidades de prefactorizar el código para facilitar la implementación. "Haz el cambio fácil, y luego haz el cambio fácil de hacer."
+
+### 3. Redactar los slices verticales
+
+Dividir el trabajo en tickets de **bala trazadora**.
+
+<vertical-slice-rules>
+
+- Cada slice corta un camino estrecho pero COMPLETO a través de todas las capas (schema, API, UI, tests) — vertical, NO un corte horizontal de una sola capa
+- Un slice terminado es demostrable o verificable por sí solo
+- Cada slice está dimensionado para caber en una sola ventana de contexto fresca
+- Cualquier prefactorización debe hacerse primero
+
+</vertical-slice-rules>
+
+Dar a cada ticket sus **aristas de bloqueo** — los otros tickets que deben completarse antes de que pueda empezar. Un ticket sin bloqueadores puede empezar de inmediato.
+
+**Los refactors amplios son la excepción al slicing vertical.** Un **refactor amplio** es un cambio mecánico — renombrar una columna, retipar un símbolo compartido — cuyo **radio de explosión** se abre en abanico por todo el codebase, de modo que una sola edición rompe miles de call sites a la vez y ningún slice vertical puede aterrizar en green. No forzarlo dentro de una bala trazadora; secuenciarlo como **expand–contract**. Primero expandir: añadir la forma nueva junto a la vieja para que nada se rompa. Luego migrar los call sites por lotes dimensionados por radio de explosión (por package, por directorio), cada lote su propio ticket bloqueado por el expand, manteniendo el CI en green de lote a lote porque la forma vieja sigue existiendo. Finalmente contraer: borrar la forma vieja cuando no quede ningún caller, en un ticket bloqueado por todos los lotes de migración. Cuando ni siquiera los lotes puedan mantenerse en green por sí solos, conservar la secuencia pero dejar que compartan una branch de integración que bloquee a un ticket final de integrar-y-verificar — el green se promete solo ahí.
+
+### 4. Interrogar al usuario
+
+Presentar la división propuesta como lista numerada. Para cada ticket, mostrar:
+
+- **Título**: nombre corto y descriptivo
+- **Bloqueado por**: qué otros tickets (si los hay) deben completarse primero
+- **Qué entrega**: el comportamiento end-to-end que este ticket hace funcionar
+
+Preguntar al usuario:
+
+- ¿La granularidad se siente bien? (¿demasiado gruesa / demasiado fina?)
+- ¿Las aristas de bloqueo son correctas — cada ticket depende solo de tickets que genuinamente lo condicionan?
+- ¿Debería fusionarse o dividirse más algún ticket?
+
+Iterar hasta que el usuario apruebe la división.
+
+### 5. Publicar los tickets en el tracker configurado
+
+Publicar los tickets aprobados. **Cómo** depende del tracker configurado — los tickets son los mismos en ambos casos, solo cambia la forma de las aristas de bloqueo:
+
+- **Archivos locales** → escribir un archivo por ticket bajo `.scratch/<feature-slug>/issues/<NN>-<slug>.md`, numerados desde `01` en orden de dependencia (bloqueadores primero). El "Bloqueado por" de cada archivo lista los números/títulos de los que depende. Usar la plantilla de archivo por ticket de abajo — un ticket por archivo, nunca un único archivo combinado.
+- **Un issue tracker real (GitHub, Linear, …)** → publicar un issue por ticket en orden de dependencia (bloqueadores primero) para que las aristas de bloqueo de cada ticket puedan referenciar identificadores reales. Usar la relación nativa de bloqueo / sub-issue de la plataforma donde exista; si no, poner en el "Bloqueado por" de cada ticket los issues que lo bloquean. Aplicar la etiqueta de triage `ready-for-agent` salvo instrucción en contra — los tickets son agarrables por un agente por construcción.
+
+Trabajar el **frontier**: cualquier ticket cuyos bloqueadores estén todos terminados. Para una cadena puramente lineal eso significa de arriba a abajo.
+
+NO cerrar ni modificar ningún issue padre.
+
+<local-ticket-template>
+
+# <NN> — <Título del ticket>
+
+**Qué construir:** el comportamiento end-to-end que este ticket hace funcionar, desde la perspectiva del usuario — no una lista de implementación capa por capa.
+
+**Bloqueado por:** los números/títulos de los tickets que condicionan a este, o "Ninguno — puede empezar de inmediato".
+
+**Estado:** ready-for-agent
+
+- [ ] Criterio de aceptación 1
+- [ ] Criterio de aceptación 2
+
+</local-ticket-template>
+
+<issue-template>
+
+## Padre
+
+Una referencia al issue padre en el tracker (si el origen fue un issue existente; si no, omitir esta sección).
+
+## Qué construir
+
+El comportamiento end-to-end que este ticket hace funcionar, desde la perspectiva del usuario — no implementación capa por capa.
+
+## Criterios de aceptación
+
+- [ ] Criterio 1
+- [ ] Criterio 2
+
+## Bloqueado por
+
+- Una referencia a cada ticket bloqueador, o "Ninguno — puede empezar de inmediato".
+
+</issue-template>
+
+En cualquiera de las dos formas, evitar rutas de archivos específicas o snippets de código — se quedan obsoletos rápido. Excepción: si un prototipo produjo un snippet que codifica una decisión con más precisión que la prosa (máquina de estados, reducer, schema, forma de un tipo), inlinearlo y anotar brevemente que vino de un prototipo. Recortar a las partes ricas en decisión — no una demo funcional, solo lo importante.
+
+Trabajar el frontier un ticket por vez con `implement`, limpiando el contexto entre tickets.

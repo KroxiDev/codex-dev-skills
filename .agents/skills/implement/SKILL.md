@@ -1,13 +1,15 @@
 ---
 name: implement
-description: Implementa trabajo definido por una spec o tickets con TDD y revisión. Usar cuando el usuario invoque explícitamente el skill para ejecutar una unidad de trabajo ya especificada.
+description: "Implementa una pieza de trabajo basada en una spec o un conjunto de tickets."
+disable-model-invocation: true
 ---
 
-# Implementar
+Implementar el trabajo descrito por el usuario en la spec o los tickets.
 
-1. Leer completamente la spec o el ticket, sus comentarios y dependencias. Confirmar que está desbloqueado.
-2. Inspeccionar el estado y las instrucciones del repositorio; preservar cambios ajenos.
-3. Acordar los seams de test y aplicar `$tdd` en slices verticales.
-4. Ejecutar typecheck y tests individuales con frecuencia; ejecutar la suite completa una vez al final.
-5. Aplicar `$code-review` al diff final y resolver los hallazgos dentro del alcance.
-6. Crear el commit en el branch actual e informar cambios y validación. No hacer push ni abrir PR sin solicitud explícita.
+Usar el skill `tdd` donde sea posible, en seams acordados de antemano.
+
+Ejecutar el typechecking con regularidad, archivos de test individuales con regularidad, y la suite completa de tests una vez al final.
+
+Al terminar, usar el skill `code-review` para revisar el trabajo.
+
+Hacer commit del trabajo en la branch actual.

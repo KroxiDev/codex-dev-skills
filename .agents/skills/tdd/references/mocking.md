@@ -1,7 +1,59 @@
-# Cuándo usar mocks
+# Cuándo mockear
 
-Usar mocks solo en límites del sistema: APIs externas, tiempo, aleatoriedad y, cuando no exista un reemplazo realista, bases de datos o filesystem.
+Mockear solo en los **límites del sistema**:
 
-No mockear modules propios, colaboradores internos ni elementos controlados por el equipo. Preferir dependency injection y adapters específicos por operación frente a un fetcher genérico con lógica condicional.
+- APIs externas (pagos, email, etc.)
+- Bases de datos (a veces — preferir una DB de test)
+- Tiempo/aleatoriedad
+- Filesystem (a veces)
 
-Cada mock debe devolver una forma concreta, revelar qué operación externa usa el test y mantener seguridad de tipos.
+No mockear:
+
+- Tus propias clases/módulos
+- Colaboradores internos
+- Nada que controles
+
+## Diseñar para la mockeabilidad
+
+En los límites del sistema, diseñar interfaces fáciles de mockear:
+
+**1. Usar inyección de dependencias**
+
+Pasar las dependencias externas desde fuera en vez de crearlas internamente:
+
+```typescript
+// Fácil de mockear
+function processPayment(order, paymentClient) {
+  return paymentClient.charge(order.total);
+}
+
+// Difícil de mockear
+function processPayment(order) {
+  const client = new StripeClient(process.env.STRIPE_KEY);
+  return client.charge(order.total);
+}
+```
+
+**2. Preferir interfaces estilo SDK sobre fetchers genéricos**
+
+Crear funciones específicas para cada operación externa en vez de una función genérica con lógica condicional:
+
+```typescript
+// BIEN: Cada función es mockeable de forma independiente
+const api = {
+  getUser: (id) => fetch(`/users/${id}`),
+  getOrders: (userId) => fetch(`/users/${userId}/orders`),
+  createOrder: (data) => fetch('/orders', { method: 'POST', body: data }),
+};
+
+// MAL: Mockear exige lógica condicional dentro del mock
+const api = {
+  fetch: (endpoint, options) => fetch(endpoint, options),
+};
+```
+
+El enfoque SDK significa:
+- Cada mock devuelve una forma específica
+- Sin lógica condicional en el setup de los tests
+- Es más fácil ver qué endpoints ejercita un test
+- Type safety por endpoint

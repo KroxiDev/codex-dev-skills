@@ -1,13 +1,12 @@
 ---
 name: grilling
-description: Somete un plan, decisión o idea a una entrevista rigurosa. Usar cuando el usuario quiera stress-testear su razonamiento o pida que se lo interrogue intensivamente.
+description: Interroga al usuario sin descanso sobre un plan, decisión o idea. Usar cuando el usuario quiera stress-testear su razonamiento, o use cualquier frase disparadora de tipo "grill".
 ---
 
-# Entrevistar rigurosamente
+Entrevístame sin descanso sobre cada aspecto de esto hasta que alcancemos un entendimiento compartido. Recorre cada rama del árbol de decisiones, resolviendo las dependencias entre decisiones una por una. Para cada pregunta, aporta tu respuesta recomendada.
 
-1. Formular una sola pregunta por turno.
-2. Adjuntar una respuesta recomendada y el trade-off principal.
-3. Priorizar decisiones que cambien alcance, comportamiento o arquitectura.
-4. Investigar por cuenta propia los hechos disponibles; pedir al usuario solo decisiones o contexto no observable.
-5. Actualizar el entendimiento tras cada respuesta y continuar hasta que no queden supuestos relevantes.
-6. Resumir el entendimiento compartido y pedir confirmación antes de actuar.
+Haz las preguntas de una en una, esperando feedback sobre cada pregunta antes de continuar. Hacer varias preguntas a la vez es desconcertante.
+
+Si un *hecho* puede encontrarse explorando el entorno (filesystem, herramientas, etc.), búscalo en vez de preguntármelo. Las *decisiones*, en cambio, son mías — plantéame cada una y espera mi respuesta.
+
+No actúes sobre ello hasta que yo confirme que hemos alcanzado un entendimiento compartido.
