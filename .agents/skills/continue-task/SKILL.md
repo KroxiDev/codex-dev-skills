@@ -1,8 +1,6 @@
 ---
 name: continue-task
 description: Traspasa la tarea actual a otra sesión del mismo workspace — un prompt copiable por defecto, o un documento markdown si lo pides.
-argument-hint: "¿En qué debería centrarse la próxima sesión?"
-disable-model-invocation: true
 ---
 
 Traspasar la tarea actual para que una sesión nueva del **mismo workspace** la retome.

@@ -4,7 +4,7 @@ Colección de **31 skills** de ingeniería en español neutro, que funcionan tan
 
 Cubre el ciclo completo: diseño de codebase, modelado de dominio, TDD, revisión de código, diagnóstico de bugs, planificación de trabajo grande, triage, traspasos entre sesiones y construcción de skills.
 
-Un solo árbol de skills sirve a ambos agentes. `SKILL.md` es el formato común; cada skill añade `agents/openai.yaml` con los metadatos de invocación de Codex, y el directorio `.claude-plugin/` empaqueta el mismo set como plugin de Claude Code.
+`.agents/skills` es la fuente canónica para Codex. Cada skill añade `agents/openai.yaml` con sus metadatos de invocación; Claude Code consume wrappers mínimos generados en `skills/`, que conservan sus campos específicos sin contaminar el frontmatter que valida Codex.
 
 ## Instalación
 
@@ -21,7 +21,7 @@ Un solo árbol de skills sirve a ambos agentes. `SKILL.md` es el formato común;
 
 Codex busca skills desde el directorio de trabajo hasta la raíz del repositorio, así que también valen en un subdirectorio si solo aplican a una parte del proyecto.
 
-**Para todos tus proyectos.** Copia los directorios de skills a `~/.codex/skills/`. Si un skill recién instalado no aparece, reinicia Codex.
+**Para todos tus proyectos.** Copia los directorios de skills a `~/.agents/skills/`. Si un skill recién instalado no aparece, reinicia Codex.
 
 ### Claude Code
 
@@ -33,6 +33,8 @@ Dos pasos, no uno — añadir el marketplace registra el catálogo, pero hasta i
 ```
 
 El repositorio es público y el marketplace se registra por HTTPS: el clone es anónimo, no hace falta cuenta de GitHub. Una vez instalado, los skills están disponibles en todos tus proyectos.
+
+Ejecuta `/reload-plugins` si ya tenías una sesión de Claude Code abierta.
 
 La instalación queda en el disco de esa máquina (`~/.claude/settings.json` y `~/.claude/plugins/`), no viaja con tu cuenta. Para actualizar:
 
@@ -57,7 +59,7 @@ La instalación queda en el disco de esa máquina (`~/.claude/settings.json` y `
 
 ## Skills incluidos
 
-Los marcados `auto` se activan solos cuando la descripción encaja con la tarea. El resto solo se disparan si los invocas: `$nombre` en Codex, `/nombre` en Claude Code.
+Los marcados `auto` se activan solos cuando la descripción encaja con la tarea. El resto solo se disparan si los invocas: `$nombre` en Codex, `/engineering-skills:nombre` en Claude Code.
 
 | Skill                           | Invocación | Descripción                                                                           |
 | :------------------------------ | :--------- | :------------------------------------------------------------------------------------ |
@@ -116,23 +118,27 @@ engineering-skills/
 │   ├── references/          # material de apoyo bajo demanda
 │   ├── scripts/             # scripts ejecutables
 │   └── assets/              # plantillas y configuración
+├── skills/<nombre>/
+│   └── SKILL.md             # wrapper generado para Claude Code
 ├── .claude-plugin/
-│   ├── plugin.json          # manifiesto del plugin, apunta a .agents/skills
+│   ├── plugin.json          # manifiesto del plugin
 │   └── marketplace.json     # catálogo, para instalar por marketplace
+├── scripts/generate-claude-skills.mjs
 ├── scripts/validate-skills.mjs
 └── tests/validate-skills.test.mjs
 ```
 
 Cada skill requiere `SKILL.md` y `agents/openai.yaml`. Los demás directorios son opcionales y solo aparecen cuando el workflow los necesita.
 
-`.agents/skills/` es fuente única para ambos agentes: Codex lo descubre por convención, y `plugin.json` lo declara como ruta de skills del plugin. En Claude Code una ruta custom de skills **suma** al `skills/` por defecto en vez de reemplazarlo, así que no hay nada duplicado ni que sincronizar.
+`.agents/skills/` contiene toda la lógica y los recursos. Los wrappers de `skills/` solo añaden el frontmatter exclusivo de Claude Code y le indican que cargue el skill canónico mediante `${CLAUDE_PLUGIN_ROOT}`. `npm run validate:skills` falla si esos wrappers no están sincronizados.
 
 ## Desarrollo
 
 1. `npm install` — instala dependencias y activa el hook pre-commit.
-2. `npm run validate:skills` — valida UTF-8, LF, frontmatter, metadatos y enlaces locales.
-3. `npm test` — comprueba el validador y las regresiones conocidas.
-4. `claude plugin validate .` — valida los manifiestos del plugin de Claude Code.
+2. `npm run build:claude` — regenera los wrappers de Claude Code desde los skills canónicos.
+3. `npm run validate:skills` — valida UTF-8, LF, frontmatter, metadatos, enlaces y sincronización.
+4. `npm test` — comprueba el validador y las regresiones conocidas.
+5. `claude plugin validate .` — valida los manifiestos y wrappers del plugin de Claude Code.
 
 ## Licencia
 

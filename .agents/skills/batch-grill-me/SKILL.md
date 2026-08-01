@@ -1,7 +1,6 @@
 ---
 name: batch-grill-me
 description: Una entrevista sin descanso que hace todas las preguntas del frontier a la vez, ronda a ronda.
-disable-model-invocation: true
 ---
 
 Ejecutar una sesión de `grilling`, pero por **rondas** en vez de pregunta a pregunta. Todo lo que fija `grilling` sigue vigente: los hechos se buscan y las decisiones se preguntan, cada pregunta lleva adjunta tu respuesta recomendada, y no se actúa hasta que el usuario confirme el entendimiento compartido. Lo único que cambia es el ritmo.

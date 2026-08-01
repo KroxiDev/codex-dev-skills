@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build:claude": "node scripts/generate-claude-skills.mjs",
     "prepare": "husky",
     "test": "node --test",
-    "validate:skills": "node scripts/validate-skills.mjs"
+    "validate:skills": "node scripts/validate-skills.mjs && node scripts/generate-claude-skills.mjs --check"
   },
   "devDependencies": {
     "husky": "^9.1.7",

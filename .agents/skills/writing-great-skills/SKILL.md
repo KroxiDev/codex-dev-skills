@@ -1,7 +1,6 @@
 ---
 name: writing-great-skills
 description: Referencia para escribir y editar bien los skills — el vocabulario y los principios que hacen a un skill predecible.
-disable-model-invocation: true
 ---
 
 Un skill existe para arrancarle determinismo a un sistema estocástico. La **predictibilidad** — que el agente siga el mismo _proceso_ en cada ejecución, no que produzca la misma salida — es la virtud raíz; cada palanca de abajo la sirve.
@@ -12,8 +11,8 @@ Los **términos en negrita** están definidos en [`glosario.md`](references/glos
 
 Dos opciones, que intercambian costes distintos:
 
-- Un skill **invocado por el modelo** conserva una **description**, de modo que el agente puede dispararlo de forma autónoma _y_ otros skills pueden alcanzarlo (tú también puedes seguir escribiendo su nombre). Contribuye a la **carga de contexto** — la description está en la ventana en cada turno. Mecánica: omitir `disable-model-invocation` y escribir una description orientada al modelo con fraseo de disparo rico ("Usar cuando el usuario quiera…, mencione…").
-- Un skill **invocado por el usuario** retira la description del alcance del agente: solo tú, escribiendo su nombre, puedes invocarlo — y ningún otro skill puede. Cero carga de contexto, pero gasta **carga cognitiva**: _tú_ eres el índice que debe recordar que existe. Mecánica: poner `disable-model-invocation: true`; la `description` pasa a ser para humanos — un resumen de una línea, sin listas de disparadores.
+- Un skill **invocado por el modelo** conserva una **description** orientada al agente, con fraseo de disparo rico ("Usar cuando el usuario quiera…, mencione…"). Deja habilitada la invocación implícita en los metadatos de cada plataforma.
+- Un skill **invocado por el usuario** usa una `description` breve, porque la persona actúa como índice. En Codex, añadir `policy.allow_implicit_invocation: false` a `agents/openai.yaml`. En Claude Code, añadir `disable-model-invocation: true` solo al wrapper de `skills/<nombre>/SKILL.md`; no poner campos exclusivos de Claude en el skill canónico de `.agents/skills`.
 
 Elegir invocación por el modelo solo cuando el agente deba alcanzar el skill por su cuenta, u otro skill deba hacerlo. Si solo se dispara a mano, hacerlo invocado por el usuario y no pagar carga de contexto.
 

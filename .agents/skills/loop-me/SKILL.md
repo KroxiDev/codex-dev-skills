@@ -1,8 +1,6 @@
 ---
 name: loop-me
 description: Entrevístame sobre las specs de los workflows que quiero construir, dentro de este workspace.
-disable-model-invocation: true
-argument-hint: "Un workflow a diseñar, o nada para salir a buscar uno"
 ---
 
 Ejecutar una sesión de `grilling` con estado cuya única salida son specs de **workflows**. Usar la disciplina de grilling — sin descanso, una pregunta por vez, una respuesta recomendada adjunta a cada una — apuntada al vocabulario y la meta de abajo. Crear, editar y borrar specs a medida que la entrevista resuelve cosas.

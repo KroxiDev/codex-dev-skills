@@ -1,8 +1,6 @@
 ---
 name: teach
 description: Enseña al usuario un skill o concepto nuevo, dentro de este workspace.
-disable-model-invocation: true
-argument-hint: "¿Sobre qué te gustaría aprender?"
 ---
 
 El usuario te ha pedido que le enseñes algo. Es una petición con estado — su intención es aprender el tema a lo largo de varias sesiones.

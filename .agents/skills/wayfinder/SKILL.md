@@ -1,7 +1,6 @@
 ---
 name: wayfinder
 description: Planifica un trozo de trabajo enorme — más de lo que cabe en una sesión de agente — como un mapa compartido de tickets de decisión en tu issue tracker, y resuélvelos de uno en uno hasta que el camino al destino esté despejado.
-disable-model-invocation: true
 ---
 
 Ha llegado una idea suelta — demasiado grande para una sesión de agente, y envuelta en niebla: el camino desde aquí hasta el **destino** aún no es visible. Wayfinding va de encontrar ese camino, no de embestir hacia el destino. Este skill traza el camino como un **mapa compartido** en el issue tracker del repo, y luego trabaja sus **tickets de decisión** — preguntas cuya resolución es una decisión, no slices de una construcción a ejecutar — de uno en uno hasta que la ruta esté clara.

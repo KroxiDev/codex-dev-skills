@@ -1,7 +1,6 @@
 ---
 name: improve-codebase-architecture
 description: Escanea un codebase en busca de oportunidades de profundización, las presenta como un informe HTML visual y luego somete a entrevista la que elijas.
-disable-model-invocation: true
 ---
 
 # Mejorar la arquitectura del codebase

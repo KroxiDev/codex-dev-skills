@@ -1,7 +1,6 @@
 ---
 name: to-spec
 description: Convierte la conversación actual en una spec y la publica en el issue tracker del proyecto — sin entrevista, solo síntesis de lo ya discutido.
-disable-model-invocation: true
 ---
 
 Este skill toma el contexto de la conversación actual y el entendimiento del codebase y produce una spec (puede que conozcas este documento como PRD). NO entrevistar al usuario — solo sintetizar lo que ya sabes.

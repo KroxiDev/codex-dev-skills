@@ -1,7 +1,6 @@
 ---
 name: triage
 description: Mueve issues y PRs externas por una máquina de estados de roles de triage — categorizar, verificar, entrevistar si hace falta y escribir briefs listos para agentes.
-disable-model-invocation: true
 ---
 
 # Triage

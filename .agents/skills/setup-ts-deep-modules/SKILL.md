@@ -1,7 +1,6 @@
 ---
 name: setup-ts-deep-modules
 description: Conecta dependency-cruiser a un repo TypeScript para que cada package sea un módulo profundo — implementación oculta en subcarpetas, alcanzable solo a través de sus archivos de entry point. Invocado por el usuario.
-disable-model-invocation: true
 ---
 
 # Configurar deep modules en TS

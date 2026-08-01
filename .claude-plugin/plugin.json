@@ -19,6 +19,5 @@
     "planning",
     "codex",
     "espanol"
-  ],
-  "skills": ["./.agents/skills"]
+  ]
 }

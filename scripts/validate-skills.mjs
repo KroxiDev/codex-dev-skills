@@ -25,6 +25,13 @@ const TEXT_FILENAMES = new Set([
 ]);
 const IGNORED_DIRECTORIES = new Set([".git", "node_modules"]);
 const UTF8_DECODER = new TextDecoder("utf-8", { fatal: true });
+const CODEX_FRONTMATTER_KEYS = new Set([
+  "allowed-tools",
+  "description",
+  "license",
+  "metadata",
+  "name",
+]);
 const MOJIBAKE_PATTERNS = [
   /\u00c3[\u0080-\u00bf]/u,
   /\u00c2[\u0080-\u00bf]/u,
@@ -149,6 +156,18 @@ function validateSkill(root, skillDirectory, texts, errors) {
   if (!frontmatter) {
     errors.push(`${displayPath(root, skillPath)}: frontmatter inválido`);
   } else {
+    const frontmatterKeys = [
+      ...frontmatter.matchAll(/^([A-Za-z][A-Za-z0-9_-]*):/gmu),
+    ].map((match) => match[1]);
+    const unsupportedKeys = frontmatterKeys.filter(
+      (key) => !CODEX_FRONTMATTER_KEYS.has(key)
+    );
+    if (unsupportedKeys.length > 0) {
+      errors.push(
+        `${displayPath(root, skillPath)}: campos de frontmatter incompatibles con Codex: ${unsupportedKeys.join(", ")}`
+      );
+    }
+
     const declaredName = scalar(frontmatter, "name");
     const description = scalar(frontmatter, "description");
     if (declaredName !== skillName) {

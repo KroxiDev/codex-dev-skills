@@ -130,6 +130,17 @@ test("rechaza frontmatter cuyo nombre no coincide con el directorio", () => {
   assert.match(result.output, /no coincide con el directorio/);
 });
 
+test("rechaza campos de frontmatter exclusivos de Claude en el skill canónico", () => {
+  const files = validSkill({
+    ".agents/skills/demo/SKILL.md":
+      "---\nname: demo\ndescription: Texto válido.\ndisable-model-invocation: true\n---\n\n# Demo\n",
+  });
+  const result = runValidator(createRepository(files));
+
+  assert.notEqual(result.status, 0);
+  assert.match(result.output, /incompatibles con Codex/);
+});
+
 test("rechaza metadatos de interfaz incompletos", () => {
   const files = validSkill({
     ".agents/skills/demo/agents/openai.yaml":

@@ -1,7 +1,6 @@
 ---
 name: implement
 description: "Implementa una pieza de trabajo basada en una spec o un conjunto de tickets."
-disable-model-invocation: true
 ---
 
 Implementar el trabajo descrito por el usuario en la spec o los tickets.
